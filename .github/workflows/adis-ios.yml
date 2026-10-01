@@ -1,0 +1,26 @@
+name: Verify Adis iOS
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'adis/**'
+      - '.github/workflows/adis-ios.yml'
+permissions:
+  contents: read
+jobs:
+  simulator-build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Compile for iOS Simulator
+        run: >-
+          xcodebuild -project adis/Adis.xcodeproj -scheme Adis
+          -configuration Debug -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Adis-333-simulator-build
+          path: build/Build/Products/Debug-iphonesimulator/Adis.app
