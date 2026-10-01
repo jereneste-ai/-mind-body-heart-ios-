@@ -1,5 +1,6 @@
 package com.jereneste.omatahti;
-import android.app.Activity;
+import androidx.activity.ComponentActivity;
+import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.net.Uri;
 import android.content.Intent;
@@ -10,7 +11,7 @@ import androidx.webkit.WebViewAssetLoader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public final class MainActivity extends Activity {
+public final class MainActivity extends ComponentActivity {
     private WebView web;
     private String pendingExport;
     private static final String ORIGIN = "https://appassets.androidplatform.net/assets/web/";
@@ -18,6 +19,9 @@ public final class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) pendingExport = savedInstanceState.getString("pendingExport");
         web = new WebView(this); setContentView(web);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() { if (web.canGoBack()) web.goBack(); else finish(); }
+        });
         web.setOnApplyWindowInsetsListener((v, insets) -> {
             if (android.os.Build.VERSION.SDK_INT >= 30) {
                 android.graphics.Insets bars = insets.getInsets(android.view.WindowInsets.Type.systemBars() | android.view.WindowInsets.Type.ime());
@@ -73,7 +77,6 @@ public final class MainActivity extends Activity {
         }
         pendingExport = null;
     }
-    @Override protected void onSaveInstanceState(Bundle out) { super.onSaveInstanceState(out); web.saveState(out); out.putString("pendingExport", pendingExport); }
-    @Override public void onBackPressed() { if (web.canGoBack()) web.goBack(); else super.onBackPressed(); }
+    @Override public void onSaveInstanceState(Bundle out) { super.onSaveInstanceState(out); web.saveState(out); out.putString("pendingExport", pendingExport); }
     @Override protected void onDestroy() { web.removeJavascriptInterface("OmaTahtiNative"); web.destroy(); super.onDestroy(); }
 }
