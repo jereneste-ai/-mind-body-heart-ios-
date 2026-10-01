@@ -1,0 +1,33 @@
+name: OmaTahti
+options:
+  deploymentTarget:
+    iOS: '16.0'
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    MARKETING_VERSION: '1.0'
+    CURRENT_PROJECT_VERSION: '1'
+targets:
+  OmaTahti:
+    type: application
+    platform: iOS
+    sources:
+      - path: OmaTahti
+        excludes: [Web, Info.plist]
+      - path: OmaTahti/Web
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jereneste.omatahti
+        INFOPLIST_FILE: OmaTahti/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: '1,2'
+        CODE_SIGN_STYLE: Automatic
+schemes:
+  OmaTahti:
+    build:
+      targets:
+        OmaTahti: all
+    archive:
+      config: Release

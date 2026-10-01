@@ -1,3 +1,3 @@
 # Mind · Body · Heart — mobiiliprojektit
 
-Oma Tahdin mobiililähdekoodi ja pilvikäännöksen tarkistus valmistellaan kansioon `oma-tahti/`. Kauppajulkaisu vaatii erikseen allekirjoituksen, laitetestit ja kehittäjätilien asetukset.
+Oma Tahdin mobiililähdekoodi on kansiossa `oma-tahti/`. GitHub Actions tarkistaa iOS- ja Android-käännökset. Kauppajulkaisu vaatii erikseen allekirjoituksen, laitetestit ja kehittäjätilien asetukset.
