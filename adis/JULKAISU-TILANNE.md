@@ -1,30 +1,19 @@
-# Adis 333 — App Store -valmistelu
+# Adis 333 — julkaisutilanne
 
-Päivitetty 1.10.2026. Tämä on lähdekoodipaketti, ei allekirjoitettu IPA eikä Applelle lähetetty sovellus.
+Päivitetty 2.10.2026.
 
-## Valmisteltu
-- SwiftUI iPhone-sovellus; iOS 17 tai uudempi; suomi, englanti, ruotsi, norjan bokmål ja viro.
-- Versio 333.0.0, koontinumero 333; Bundle ID fi.jereneste.adis (vahvistettava Apple-tilillä).
-- Mieliteon ja retkahduksen tukinäkymät, tukikortti, harjoitukset, oma polku, oma viikko ja ihmisen tuki.
-- Ajastimen uudelleenkäynnistys korjattu; kansainväliset päihde- ja rahapelitukilinkit lisätty.
-- App Store -tekstiluonnokset, kuvake ja tietosuojamanifesti mukana.
-- GitHub Actions -työnkulku voi kääntää simulaattoriversion Mac-pilvessä. Työnkulkua ei ole ajettu. Se ei allekirjoita eikä lähetä sovellusta Applelle.
+## Vahvistettu
+- Viisi käyttöliittymäkieltä: suomi, englanti, ruotsi, norjan bokmål ja viro.
+- Korjattu lähdekoodi c8a632e89db07e16d6cb7ebb156c6453b30c1022 läpäisi iOS-simulaattorin käännöksen GitHubin Mac-ympäristössä.
+- Todiste: https://github.com/jereneste-ai/-mind-body-heart-ios-/actions/runs/36953733674
+- Käännöksen onnistuminen ei osoita käyttöliittymän tai ostojen toimivuutta eikä tarkoita App Store -hyväksyntää.
 
-## Lähetyksen edellytykset
-1. Vahvista aktiivinen Apple Developer -jäsenyys ja App Store Connect -sovellustietue. Säilytä jo rekisteröity Bundle ID, jos tietue on olemassa.
-2. Käännä ja testaa Xcodessa tai Mac-pilvessä. Tarkista suomi/englanti, puhelulinkit, VoiceOver, tekstin suurennus, offline-käyttö, ajastin, jakaminen ja merkintöjen poisto.
-3. Valitse kehittäjätiimi, tee allekirjoitettu Release-arkisto ja lähetä App Store Connectiin. Käytä turvallista allekirjoitusasetusta; älä lisää avaimia tai salasanoja lähdekoodiin tai chattiin.
-4. Julkaise iPhone-version toteutusta vastaava tietosuojasivu ja tukisivu. Verkkoversion tallennus eroaa iPhone-versiosta: iPhone-version kirjoitetut tekstit ovat istuntomuistissa.
-5. Lisää aidot laitekuvakaappaukset, tarkista ikäluokitus, tietosuojailmoitus, jakelualueet ja yhteystiedot. Lisää App Review -yhteyshenkilö tilillä.
-6. Testaa koonti TestFlightissa ja lähetä App Review -arvioon. Apple päättää hyväksynnästä ja julkaisuajasta.
+## Seuraavat julkaisuesteet
+1. StoreKit-tilaus ja ostojen palautus puuttuvat. Sovittu kaupallinen tavoite on yksi kuukausi maksutta, sitten 4,99 €/kk. Apple-tuote, kokeilukelpoisuus ja maakohtaiset hinnat on määritettävä ja testattava. Nykyisessä sovelluksessa ei peritä maksuja.
+2. Allekirjoitettu laitekoonti ja TestFlight-testi puuttuvat. Bundle ID fi.jereneste.adis ja kehittäjätiimi on vahvistettava Apple-tilillä.
+3. Testaa viisi kieltä, VoiceOver, suuret tekstikoot, offline-käyttö, ajastin, jakaminen ja tietojen poisto oikealla iPhonella.
+4. Julkaise natiivisovelluksen toteutusta vastaavat tietosuoja- ja tukisivut. Kirjoitukset ovat istuntomuistissa; etenemismerkinnät tallentuvat laitteelle.
+5. Lisää todelliset kuvakaappaukset, kauppatekstit, ikäluokitus, jakelualueet ja App Review -tiedot. Lähetä valmis koonti Applelle arvioitavaksi.
 
-## Hinta
-Sovelluksessa ei ole StoreKit-tilausta tai ostojen palautusta. Älä ilmoita yhden kuukauden kokeilua tai 4,99 €/kk tilausta toimivaksi ennen maksutoiminnon toteutusta ja testausta. Ensimmäinen koonti on nykyisen toteutuksen mukaisesti maksuton.
-
-## Julkaisun nykytila
-Linux-ympäristössä ei ole Xcodea tai iOS-simulaattoria. Tätä versiota ei ole käännetty, allekirjoitettu, ajettu iPhonella tai lähetetty Applelle. Sisältöä ei ole vahvistettu ammattilaisen arvioimaksi. Paketti mahdollistaa seuraavan käännös- ja tarkistusvaiheen.
-
-App Store Connect: https://appstoreconnect.apple.com/
-Apple Developer: https://developer.apple.com/account/
-
-Kielilisäys: katso KIELITARKISTUS.md. Uudet kielet on tarkistettava äidinkielisesti ja testattava laitteella ennen kauppajulkaisua.
+## Sisällön tarkistuksen rajat
+Keskeisiin ruotsin ja norjan tukiteksteihin tehtiin selvennyksiä. Suomen hätäohje ei enää oleta käyttäjän olevan Suomessa. Suomen tukipuhelimet tarkistettiin palveluntarjoajien sivuilta 2.10.2026. Ammattilaisen tai äidinkielisen tarkastajan hyväksyntää ei ole saatu. Sovellusta ei ole lähetetty Applelle.
