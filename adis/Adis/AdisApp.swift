@@ -179,7 +179,7 @@ struct AdisHome: View {
     private var relapseCard: some View {
         Card {
             Text(t("Retkahduksen jälkeen", "After a return to use")).font(.title2.bold())
-            Text(t("Jos epäilet yliannostusta, hengitys on vaikeaa, olet sekava tai olet välittömässä vaarassa, soita 112. Kiireellisessä muussa terveyshuolessa soita 116117.", "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms."))
+            Text(t("Jos epäilet yliannostusta, hengitys on vaikeaa, olet sekava tai olet välittömässä vaarassa, soita paikalliseen hätänumeroon. Suomessa hätänumero on 112. Muissa kiireellisissä terveyshuolissa ota yhteyttä paikalliseen terveydenhuoltoon.", "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms."))
                 .foregroundStyle(Palette.brown)
             Text(t("Voit sanoa turvalliselle ihmiselle: ‘Minulle kävi vaikeasti. Voisitko olla kanssani ja auttaa hakemaan apua?’", "You could tell someone safe: ‘Something difficult happened. Could you stay with me and help me get support?’"))
             Button(t("Näytä apu ja yhteystiedot", "Show support and contacts")) { selectedTab = 4 }
@@ -491,6 +491,7 @@ struct AdisHome: View {
                     resource(t("Gamblers Anonymous meetings", "Gamblers Anonymous meetings"), "https://gamblersanonymous.org/international-meetings/")
                     resource(t("Find a Helpline by country", "Find a Helpline by country"), "https://findahelpline.com/")
                 } else {
+                    Text("Palvelut Suomessa").font(.headline)
                     Link("EHYT Päihdeneuvonta 0800 900 45", destination: URL(string: "tel:080090045")!)
                     Link("Peluuri 0800 100 101 · ma–pe 12–18", destination: URL(string: "tel:0800100101")!)
                     resource("EHYT Päihdeneuvonta", "https://ehyt.fi/selkokieli/mista-saa-apua/")
@@ -532,6 +533,9 @@ struct AdisHome: View {
                 resource(t("Find a helpline near you", "Find a helpline near you"), "https://findahelpline.com/")
                 Text(t("If someone is in immediate danger, contact your local emergency services.", "If someone is in immediate danger, contact your local emergency services.")).font(.footnote.bold())
             } else {
+                Text("Alla olevat numerot ovat Suomen palveluja. Jos olet muualla, käytä paikallista hätänumeroa ja paikallisia tukipalveluja.").font(.footnote)
+                resource("Etsi tukipalvelu maittain", "https://findahelpline.com/")
+                resource("Päivystysavun aluekohtaiset ohjeet", "https://116117.fi/")
                 Link("MIELI Kriisipuhelin 09 2525 0111", destination: URL(string: "tel:0925250111")!)
                 Link("Päivystysapu 116117", destination: URL(string: "tel:116117")!)
                 Link("Välitön vaara: 112", destination: URL(string: "tel:112")!)
@@ -592,7 +596,7 @@ private enum AdisTranslations {
             "What's happening right now?": "Vad händer just nu?",
             "The urge is strong": "Suget är starkt",
             "I feel overwhelmed": "Jag känner mig överväldigad",
-            "I used or gambled again": "Jag använde eller spelade om pengar igen",
+            "I used or gambled again": "Jag använde alkohol eller droger eller spelade om pengar igen",
             "I want to support my routine": "Jag vill stärka min vardag",
             "How strong is the urge?": "Hur starkt är suget?",
             "Urge intensity": "Sugets styrka",
@@ -693,7 +697,7 @@ private enum AdisTranslations {
             "A few words, if you like": "Några ord, om du vill",
             "Clear writing": "Rensa texten",
             "This text is not saved. It disappears when the app is closed.": "Den här texten sparas inte. Den försvinner när appen stängs.",
-            "If you used or gambled again": "Om du använde eller spelade om pengar igen",
+            "If you used or gambled again": "Om du använde alkohol eller droger eller spelade om pengar igen",
             "First take care of your safety and reconnect with support. A return to use does not define your worth.": "Ta först hand om din säkerhet och återknyt kontakten med stöd. Att börja använda igen avgör inte ditt värde.",
             "When gambling calls": "När spel om pengar lockar",
             "Delay the decision, close the gambling site and step away from payment methods. Ask for help setting limits on money and gambling accounts.": "Skjut upp spelbeslutet, stäng spelsidan och lämna betalningsmöjligheterna. Be om hjälp att sätta gränser för pengar och spelkonton.",
@@ -772,7 +776,7 @@ private enum AdisTranslations {
             "Pause and choose one next step.": "Stopp opp og velg ett neste steg.",
             "Contact someone you trust or your care team if you need help.": "Kontakt noen du stoler på eller behandleren din hvis du trenger hjelp.",
             "After a return to use": "Etter at du har begynt å bruke rusmidler igjen",
-            "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms.": "Hvis du mistenker en overdose, har problemer med å puste, føler deg forvirret eller er i umiddelbar fare, kontakt den lokale nødetaten. Søk akutt medisinsk råd ved andre bekymringsfulle symptomer.",
+            "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms.": "Hvis du mistenker en overdose, har problemer med å puste, føler deg forvirret eller er i umiddelbar fare, ring det lokale nødnummeret. Søk akutt medisinsk råd ved andre bekymringsfulle symptomer.",
             "You could tell someone safe: ‘Something difficult happened. Could you stay with me and help me get support?’": "Du kan si til en trygg person: «Noe vanskelig har skjedd. Kan du være sammen med meg og hjelpe meg med å få støtte?»",
             "Show support and contacts": "Vis støtte og kontaktinformasjon",
             "If alcohol or sedative use has been heavy or prolonged, ask a clinician about stopping safely. This app does not provide withdrawal instructions.": "Hvis du har brukt mye alkohol eller beroligende legemidler, eller brukt dem over lang tid, spør helsepersonell om hvordan du kan slutte trygt. Appen gir ikke instruksjoner om avrusning.",
@@ -865,7 +869,7 @@ private enum AdisTranslations {
             "Support for recovery": "Støtte til tilfriskning",
             "What does Adis do?": "Hva gjør Adis?",
             "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Adis stiller ikke diagnoser, behandler ikke abstinens og erstatter ikke profesjonell behandling. Hvis du får sterke symptomer når du slutter med et rusmiddel, spør helsepersonell om hvordan du kan gå videre trygt.",
-            "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du trenger ikke å gå tilbake til traumer alene. Tro, tilgivelse og takknemlighet er frivillig.",
+            "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du trenger ikke å gå tilbake til traumer alene. Tro, tilgivelse og takknemlighet er frivillige valg.",
             "The app is free. It needs no account and does not send your support card to a server.": "Appen er gratis. Du trenger ingen konto, og støttekortet ditt sendes ikke til en server.",
             "Read privacy policy": "Les personvernerklæringen",
             "Clear all my marks": "Fjern alle mine merker",
@@ -889,7 +893,7 @@ private enum AdisTranslations {
             "I'll add this later.": "Jeg legger til dette senere.",
             "I stop and consider my next step.": "Jeg stopper opp og vurderer neste steg.",
             "I choose someone I trust.": "Jeg velger noen jeg stoler på.",
-            "I contact care or peer support.": "Jeg tar kontakt med behandling eller likemannsstøtte.",
+            "I contact care or peer support.": "Jeg kontakter helsepersonell eller søker likemannsstøtte.",
             "A hard day does not change my worth.": "En vanskelig dag endrer ikke verdien min.",
             "Substance-use support by country": "Støtte ved rusmiddelbruk etter land",
             "Gambling support by country": "Støtte ved pengespill etter land",
@@ -897,7 +901,7 @@ private enum AdisTranslations {
             "Gamblers Anonymous meetings": "Gamblers Anonymous-møter",
             "Find a Helpline by country": "Finn en hjelpetelefon etter land",
             "Find a helpline near you": "Finn en hjelpetelefon nær deg",
-            "If someone is in immediate danger, contact your local emergency services.": "Hvis noen er i umiddelbar fare, kontakt den lokale nødetaten.",
+            "If someone is in immediate danger, contact your local emergency services.": "Hvis noen er i umiddelbar fare, ring det lokale nødnummeret.",
         ],
         "et": [
             "Right now": "Praegu",

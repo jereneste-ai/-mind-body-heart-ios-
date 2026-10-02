@@ -35,7 +35,7 @@
     "Pause and choose one next step.": "Stopp opp og velg ett neste steg.",
     "Contact someone you trust or your care team if you need help.": "Kontakt noen du stoler på eller behandleren din hvis du trenger hjelp.",
     "After a return to use": "Etter at du har begynt å bruke rusmidler igjen",
-    "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms.": "Hvis du mistenker en overdose, har problemer med å puste, føler deg forvirret eller er i umiddelbar fare, kontakt den lokale nødetaten. Søk akutt medisinsk råd ved andre bekymringsfulle symptomer.",
+    "If you suspect an overdose, have trouble breathing, feel confused or are in immediate danger, call local emergency services. Seek urgent medical advice for other concerning symptoms.": "Hvis du mistenker en overdose, har problemer med å puste, føler deg forvirret eller er i umiddelbar fare, ring det lokale nødnummeret. Søk akutt medisinsk råd ved andre bekymringsfulle symptomer.",
     "You could tell someone safe: ‘Something difficult happened. Could you stay with me and help me get support?’": "Du kan si til en trygg person: «Noe vanskelig har skjedd. Kan du være sammen med meg og hjelpe meg med å få støtte?»",
     "Show support and contacts": "Vis støtte og kontaktinformasjon",
     "If alcohol or sedative use has been heavy or prolonged, ask a clinician about stopping safely. This app does not provide withdrawal instructions.": "Hvis du har brukt mye alkohol eller beroligende legemidler, eller brukt dem over lang tid, spør helsepersonell om hvordan du kan slutte trygt. Appen gir ikke instruksjoner om avrusning.",
@@ -128,7 +128,7 @@
     "Support for recovery": "Støtte til tilfriskning",
     "What does Adis do?": "Hva gjør Adis?",
     "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Adis stiller ikke diagnoser, behandler ikke abstinens og erstatter ikke profesjonell behandling. Hvis du får sterke symptomer når du slutter med et rusmiddel, spør helsepersonell om hvordan du kan gå videre trygt.",
-    "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du trenger ikke å gå tilbake til traumer alene. Tro, tilgivelse og takknemlighet er frivillig.",
+    "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du trenger ikke å gå tilbake til traumer alene. Tro, tilgivelse og takknemlighet er frivillige valg.",
     "The app is free. It needs no account and does not send your support card to a server.": "Appen er gratis. Du trenger ingen konto, og støttekortet ditt sendes ikke til en server.",
     "Read privacy policy": "Les personvernerklæringen",
     "Clear all my marks": "Fjern alle mine merker",
@@ -152,7 +152,7 @@
     "I'll add this later.": "Jeg legger til dette senere.",
     "I stop and consider my next step.": "Jeg stopper opp og vurderer neste steg.",
     "I choose someone I trust.": "Jeg velger noen jeg stoler på.",
-    "I contact care or peer support.": "Jeg tar kontakt med behandling eller likemannsstøtte.",
+    "I contact care or peer support.": "Jeg kontakter helsepersonell eller søker likemannsstøtte.",
     "A hard day does not change my worth.": "En vanskelig dag endrer ikke verdien min.",
     "Substance-use support by country": "Støtte ved rusmiddelbruk etter land",
     "Gambling support by country": "Støtte ved pengespill etter land",
@@ -160,7 +160,7 @@
     "Gamblers Anonymous meetings": "Gamblers Anonymous-møter",
     "Find a Helpline by country": "Finn en hjelpetelefon etter land",
     "Find a helpline near you": "Finn en hjelpetelefon nær deg",
-    "If someone is in immediate danger, contact your local emergency services.": "Hvis noen er i umiddelbar fare, kontakt den lokale nødetaten."
+    "If someone is in immediate danger, contact your local emergency services.": "Hvis noen er i umiddelbar fare, ring det lokale nødnummeret."
   },
   "privacy": "Oppdatert 1. oktober 2026\n\nAdis krever ingen konto. Tekst i støttekortet, ukeplanen og den frivillige refleksjonen blir i appens minne i den aktuelle økten og sendes ikke til en Adis-server. Språkvalg, valgt vei, merker på veien og numrene på fullførte dager i det frivillige 21-dagers forsøket lagres lokalt på enheten din. Du kan fjerne merkene i appen. Adis bruker ikke analyseverktøy eller annonsenettverk. Hvis du åpner delingsmenyen i iOS, velger du selv hvor støttekortet skal sendes. Eksterne støttelenker følger tjenestenes egne personvernregler. Adis har ingen profiler, sporing eller betalinger. Spørsmål om personvern: hyvinvalmennus@outlook.com."
 }
