@@ -56,6 +56,7 @@ struct AddisHome: View {
     @State private var showPrivacy = false
 
     private var journalLabels: [String] { AddisJournalText.values[language] ?? AddisJournalText.values["en"]! }
+    private var priceInfo: String { ["fi": "9,99 €/kk · Tilausmaksaminen ei ole vielä käytössä.", "en": "€9.99/month · Subscription payments are not yet available.", "sv": "9,99 €/månad · Betalning för abonnemang är ännu inte tillgänglig.", "nb": "9,99 €/måned · Abonnementsbetaling er ikke tilgjengelig ennå.", "et": "9,99 €/kuu · Tellimuse eest tasumine pole veel saadaval."][language] ?? "€9.99/month · Subscription payments are not yet available." }
     private var greeting: String { AddisJournalText.greetings[language] ?? AddisJournalText.greetings["en"]! }
 
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -137,6 +138,7 @@ struct AddisHome: View {
         Group {
             Card {
                 Text("Addis").font(.caption.bold()).textCase(.uppercase).foregroundStyle(Palette.accent)
+                Text(priceInfo).font(.footnote).foregroundStyle(Palette.muted)
                 Text(t("Sinun ei tarvitse selvitä yksin.", "You don't have to face this alone."))
                     .font(.largeTitle).bold().foregroundStyle(Palette.brown)
                 Text(t("Yksi hetki kerrallaan. Valitse lähin tilanne ja yksi pieni seuraava teko.", "One moment at a time. Choose what fits and one small next step."))

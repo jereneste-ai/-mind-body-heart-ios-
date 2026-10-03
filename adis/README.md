@@ -1,6 +1,6 @@
 # Addis — erillinen iPhone-sovellus
 
-Addis on maksuton, erillinen SwiftUI-sovellus. Oma Xcode-kohde `Adis`, näyttönimi `Addis`, bundle ID `fi.jereneste.adis`. Ei Hyvinn-riippuvuutta. Vanha sisäinen kohteen nimi ja tunniste säilyvät päivitysten jatkuvuuden vuoksi.
+Addis on erillinen SwiftUI-sovellus. Suunniteltu tilaus maksaa 9,99 €/kk. Tilausmaksaminen ja StoreKit-ostot eivät vielä ole toteutettu. Oma Xcode-kohde `Adis`, näyttönimi `Addis`, bundle ID `fi.jereneste.adis`. Ei Hyvinn-riippuvuutta. Vanha sisäinen kohteen nimi ja tunniste säilyvät päivitysten jatkuvuuden vuoksi.
 
 ## Päivitys 3.10.2026, build 334
 
