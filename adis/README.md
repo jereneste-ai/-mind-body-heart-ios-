@@ -1,30 +1,21 @@
-# Adis iPhone 333 – lähdekoodi
+# Addis — erillinen iPhone-sovellus
 
-Tämä on yksi SwiftUI-sovellus, jossa on käyttöliittymä suomeksi, englanniksi, ruotsiksi, norjan bokmåliksi ja viroksi. Sen viisi välilehteä ovat **Juuri nyt**, **Oma suunnitelma**, **Keinot**, **Oma polku** ja **Tuki**. Oma polku sisältää kolme käyttäjän valittavaa vaihetta: alkumetrit, uuden arjen rakentaminen ja uusi tavoite. Vaiheet ovat sisältönäkymiä, eivät paranemisaikatauluja tai ihmisarvon tasoja.
+Addis on maksuton, erillinen SwiftUI-sovellus. Oma Xcode-kohde `Adis`, näyttönimi `Addis`, bundle ID `fi.jereneste.adis`. Ei Hyvinn-riippuvuutta. Vanha sisäinen kohteen nimi ja tunniste säilyvät päivitysten jatkuvuuden vuoksi.
 
-Juuri nyt -näkymässä on retkahduksen jälkeinen erillinen tukikortti, helppo siirtyminen ihmisen tuen välilehteen ja vapaaehtoinen seuraava teko. Keinot-välilehdellä on lyhyitä harjoituksia ja ajastin. Oma polku säilyttää valitun vaiheen ja kokeillut askeleet laitteen paikallisissa asetuksissa. Oma viikko antaa tilaa tärkeälle asialle, pienelle teolle, levolle ja ihmiselle, jolta pyytää apua. Lisäksi mukana on vapaaehtoinen 21 päivän arjen kokeilu ilman nollautuvaa putkea.
+## Päivitys 3.10.2026, build 334
 
-Sovellus ei vaadi tiliä, sisällä mainoksia tai lähetä tukikortin tekstiä omalle palvelimelle. Tukikortti, Oma viikon tekstit ja kirjoitus pysyvät istunnon muistissa; käyttäjä voi itse avata iOS:n jakoikkunan. Kieli, valittu vaihe, vaihemerkinnät ja 21 päivän kokeilun numerot säilyvät paikallisesti. Merkinnöille ja istunnon teksteille on poistopainike. Ulkoiset tukilinkit ovat palveluntarjoajien omia sivuja.
+- Addis-nimi ja ”Moi, mitä sinulle kuuluu?” aloitusnäkymässä.
+- Jokaisella 12 polkutehtävällä oma tallennettava ja poistettava muistiinpano.
+- Päiväkirja avautuu kirjakuvakkeesta tai aloitusnäkymästä. Neljä kenttää: tämänhetkinen olo, mikä auttoi, tuen tarve, seuraava askel. Päivättyjen merkintöjen tallennus, avaaminen, muokkaus ja poisto.
+- Merkinnät tallennetaan painikkeesta laitteen Application Support -hakemistoon atomisesti ja iOS:n täydellä tiedostosuojauksella. Hakemisto ei kuulu laitevarmuuskopioihin. Ei pilvisynkronointia tai verkkoversion tietojen siirtoa.
+- Aiempien viiden välilehden toiminta säilyy. Tukikortti, viikkotekstit ja vapaaehtoinen kirjoitusharjoitus ovat edelleen istuntokohtaisia; vain uudet tehtävämuistiinpanot ja päiväkirja säilyvät tallennuksen jälkeen.
 
-## Avaaminen ja tarkistaminen
+## Kielten ja verkkoversion ero
 
-1. Avaa `Adis.xcodeproj` Macin Xcodessa. Projektin käyttöönoton tavoite on iOS 17 tai uudempi.
-2. Valitse oma Apple-tiimi kohdassa Signing & Capabilities. Vaihda `fi.jereneste.adis` tarvittaessa tilillesi vapaaseen Bundle Identifieriin.
-3. Käännä Debug-versio ja testaa fyysisellä iPhonella suomen ja englannin välilehdet, retkahdusnäkymä, tukipuhelujen avautuminen, ajastin, tukikortin jako ja tyhjennys, Oma viikko sekä polun merkintöjen säilyminen käynnistysten välillä.
-4. Testaa VoiceOver, tekstin suurennus, pienet näytöt ja käyttö ilman verkkoyhteyttä. Tarkista kaikkien tukipalvelujen tiedot ennen julkaisua.
-5. Hanki päihde- ja riippuvuustyön ammattilaisen sekä kokemusasiantuntijoiden sisältöarvio. Päivitä ja julkaise tietosuojaseloste julkisessa osoitteessa ennen kauppaan lähettämistä.
-6. Tee Release-arkisto, testaa TestFlightissa ja täytä App Store Connectin ilmoitukset nykyisen toteutuksen mukaisesti.
+Tässä natiiviversiossa on FI, EN, SV, NB ja ET. Verkkoversiossa on 21 kieltä ja laajempi harjoituskokoelma. Natiiviversion 16 muun kielen ja sisällön täydellinen vastaavuus ei vielä ole toteutettu. Käännöksiä ei ole ammattimaisesti kielitarkistettu.
 
-Tätä pakettia **ei ole käännetty eikä testattu iPhonella tässä ympäristössä**, koska Xcode ja iOS-simulaattori eivät ole saatavilla. Koodi on lähdepaketti, ei allekirjoitettu julkaisuversio eikä App Store -hyväksyntä. Käyttöliittymän tukitekstit vaativat ammatillisen arvioinnin ennen laajaa jakelua.
+## Käännös ja julkaisu
 
-## Tukipalvelujen tarkistettavat lähteet
+`.github/workflows/adis-ios.yml` kääntää simulaattoriversion. `adis-release.yml` tekee allekirjoittamattoman iPhone-arkiston. Onnistunutkaan arkisto ei ole TestFlight-julkaisu eikä asennettavissa iPhoneen sellaisenaan.
 
-- EHYT Päihdeneuvonta: https://ehyt.fi/selkokieli/mista-saa-apua/
-- Peluuri: https://www.peluuri.fi/
-- Päivystysapu: https://www.116117.fi/
-
-Suomen ulkopuolella sovellus ohjaa paikallisten palvelujen äärelle. Sovellus ei tarjoa vieroitusohjeita eikä valvo käyttäjän vointia.
-
-Katso ajantasainen lähetyslista tiedostosta JULKAISU-TILANNE.md. Mukana oleva Mac-pilvityönkulku tekee allekirjoittamattoman simulaattorikäännöksen, ei App Store -lähetystä.
-
-Kielilisäys: katso KIELITARKISTUS.md. Uudet kielet on tarkistettava äidinkielisesti ja testattava laitteella ennen kauppajulkaisua.
+TestFlight vaatii Apple-tiimin allekirjoituksen, sovellustietueen App Store Connectiin ja allekirjoitetun arkiston viennin/lähetyksen. Salaisia avaimia ei tallenneta tähän repositorioon. Nykyinen bundle ID on tarkistettava Apple-tilillä ennen lähettämistä. Testaa fyysisellä iPhonella tallennus ja uudelleenkäynnistys, poisto, kielenvaihto, suuret tekstit, VoiceOver sekä tukilinkit ennen ulkoista testausta.

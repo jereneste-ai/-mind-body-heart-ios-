@@ -2,9 +2,9 @@ import SwiftUI
 import Combine
 
 @main
-struct AdisApp: App {
+struct AddisApp: App {
     var body: some Scene {
-        WindowGroup { AdisHome() }
+        WindowGroup { AddisHome() }
     }
 }
 
@@ -27,11 +27,13 @@ private struct Card<Content: View>: View {
     }
 }
 
-struct AdisHome: View {
+struct AddisHome: View {
     @AppStorage("adis.language") private var language = "fi"
     @AppStorage("adis.challenge.completed") private var completedDayString = ""
     @AppStorage("adis.path.phase") private var phase = 0
     @AppStorage("adis.path.steps") private var completedStepString = ""
+    @StateObject private var notes = AddisNotesStore()
+    @State private var showJournal = false
     @State private var selectedTab = 0
     @State private var urge: Double = 5
     @State private var situation = ""
@@ -53,10 +55,13 @@ struct AdisHome: View {
     @State private var showFaith = false
     @State private var showPrivacy = false
 
+    private var journalLabels: [String] { AddisJournalText.values[language] ?? AddisJournalText.values["en"]! }
+    private var greeting: String { AddisJournalText.greetings[language] ?? AddisJournalText.greetings["en"]! }
+
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private var english: Bool { language != "fi" }
     private func t(_ fi: String, _ en: String) -> String {
-        language == "fi" ? fi : (AdisTranslations.values[language]?[en] ?? en)
+        language == "fi" ? fi : (AddisTranslations.values[language]?[en] ?? en)
     }
 
     var body: some View {
@@ -78,6 +83,7 @@ struct AdisHome: View {
                 .tag(4)
         }
         .tint(Palette.brown)
+        .sheet(isPresented: $showJournal) { AddisJournalView(store: notes, labels: journalLabels) }
         .onReceive(ticker) { _ in
             guard timerRunning else { return }
             if timerSeconds > 0 { timerSeconds -= 1 }
@@ -86,7 +92,7 @@ struct AdisHome: View {
         .sheet(isPresented: $showPrivacy) {
             NavigationStack {
                 ScrollView {
-                    Text(privacyText)
+                    Text(privacyText + "\n\n" + journalLabels[14])
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(20)
                 }
@@ -107,6 +113,10 @@ struct AdisHome: View {
             .background(Palette.background)
             .navigationTitle(title)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showJournal = true } label: { Image(systemName: "book.closed") }
+                    .accessibilityLabel(journalLabels[0])
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button("Suomi", action: { language = "fi" })
@@ -126,7 +136,7 @@ struct AdisHome: View {
     private var nowScreen: some View {
         Group {
             Card {
-                Text("Adis 333").font(.caption.bold()).textCase(.uppercase).foregroundStyle(Palette.accent)
+                Text("Addis").font(.caption.bold()).textCase(.uppercase).foregroundStyle(Palette.accent)
                 Text(t("Sinun ei tarvitse selvitä yksin.", "You don't have to face this alone."))
                     .font(.largeTitle).bold().foregroundStyle(Palette.brown)
                 Text(t("Yksi hetki kerrallaan. Valitse lähin tilanne ja yksi pieni seuraava teko.", "One moment at a time. Choose what fits and one small next step."))
@@ -134,6 +144,8 @@ struct AdisHome: View {
                     .font(.headline).foregroundStyle(Palette.accent)
             }
             Card {
+                Text(greeting).font(.title2.bold())
+                Button(journalLabels[0]) { showJournal = true }.buttonStyle(.bordered)
                 Text(t("Mitä tapahtuu juuri nyt?", "What's happening right now?"))
                     .font(.title2.bold())
                 choice("urge", t("Mieliteko on vahva", "The urge is strong"), binding: $situation)
@@ -353,6 +365,7 @@ struct AdisHome: View {
                     }
                     .buttonStyle(.bordered).tint(Palette.brown)
                     .accessibilityLabel(phaseStep(phase, n) + ". " + (completedSteps.contains(key) ? t("Merkitty", "Marked") : t("Ei merkitty", "Not marked")))
+                    AddisTaskNoteView(store: notes, key: key, title: phaseStep(phase, n), labels: journalLabels).id(key)
                 }
                 Text(t("Merkintä tarkoittaa ‘kokeilin’. Voit poistaa sen milloin tahansa. Sinun ei tarvitse tehdä tehtäviä järjestyksessä.", "A mark means ‘I tried it’. Remove it whenever you wish. The steps have no required order."))
                     .font(.footnote).foregroundStyle(Palette.muted)
@@ -502,8 +515,8 @@ struct AdisHome: View {
                 }
             }
             Card {
-                Text(t("Mitä Adis tekee?", "What does Adis do?")).font(.title2.bold())
-                Text(t("Adis ei diagnosoi, hoida vieroitusoireita eikä korvaa ammatillista hoitoa. Jos lopettaminen aiheuttaa voimakkaita oireita, kysy terveydenhuollosta turvallinen tapa edetä.", "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely."))
+                Text(t("Mitä Addis tekee?", "What does Addis do?")).font(.title2.bold())
+                Text(t("Addis ei diagnosoi, hoida vieroitusoireita eikä korvaa ammatillista hoitoa. Jos lopettaminen aiheuttaa voimakkaita oireita, kysy terveydenhuollosta turvallinen tapa edetä.", "Addis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely."))
                 Text(t("Traumamuistoja ei tarvitse käsitellä yksin. Usko, anteeksianto ja kiitollisuus ovat vapaaehtoisia.", "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional."))
                 Text(t("Sovellus on maksuton. Se ei pyydä käyttäjätiliä eikä lähetä kirjoittamaasi tukikorttia palvelimelle.", "The app is free. It needs no account and does not send your support card to a server."))
                     .font(.footnote).foregroundStyle(Palette.muted)
@@ -518,11 +531,11 @@ struct AdisHome: View {
     }
 
     private var privacyText: String {
-        if let text = AdisTranslations.privacy[language] { return text }
+        if let text = AddisTranslations.privacy[language] { return text }
         if english {
-            return "Updated 1 October 2026\n\nAdis does not require an account. Text in the support card, weekly plan and optional reflection remains in the app's memory for the current session and is not sent to an Adis server. Language preference, chosen path, path marks and completed day numbers in the optional 21-day experiment are stored locally on your device. You can clear these marks in the app. Adis uses no analytics or advertising networks. If you open the iOS share sheet, you choose where to send your support card. External support links are governed by those services' own privacy practices. Adis has no profiles, tracking or payments. Privacy inquiries: hyvinvalmennus@outlook.com."
+            return "Updated 1 October 2026\n\nAddis does not require an account. Text in the support card, weekly plan and optional reflection remains in the app's memory for the current session and is not sent to an Addis server. Language preference, chosen path, path marks and completed day numbers in the optional 21-day experiment are stored locally on your device. You can clear these marks in the app. Addis uses no analytics or advertising networks. If you open the iOS share sheet, you choose where to send your support card. External support links are governed by those services' own privacy practices. Addis has no profiles, tracking or payments. Privacy inquiries: hyvinvalmennus@outlook.com."
         }
-        return "Päivitetty 1.10.2026\n\nAdis ei vaadi käyttäjätiliä. Tukikortin, Oma viikon ja vapaaehtoisen kirjoituksen teksti säilyy sovelluksen muistissa käyttökerran ajan eikä sitä lähetetä Adis-palvelimelle. Kielen valinta, valittu polku, polun merkinnät ja vapaaehtoiseen 21 päivän kokeiluun merkityt päivät tallentuvat laitteen paikallisiin asetuksiin. Merkinnät voi poistaa sovelluksessa. Sovellus ei käytä analytiikkaa tai mainosverkkoja. Jos avaat iOS:n Jaa-toiminnon, päätät itse, minne tukikortti lähetetään. Ulkoiset tukilinkit toimivat kyseisten palvelujen omien tietosuojakäytäntöjen mukaan. Adiksessa ei ole profiileja, seurantaa tai maksuja. Tietosuoja-asiat: hyvinvalmennus@outlook.com."
+        return "Päivitetty 1.10.2026\n\nAddis ei vaadi käyttäjätiliä. Tukikortin, Oma viikon ja vapaaehtoisen kirjoituksen teksti säilyy sovelluksen muistissa käyttökerran ajan eikä sitä lähetetä Addis-palvelimelle. Kielen valinta, valittu polku, polun merkinnät ja vapaaehtoiseen 21 päivän kokeiluun merkityt päivät tallentuvat laitteen paikallisiin asetuksiin. Merkinnät voi poistaa sovelluksessa. Sovellus ei käytä analytiikkaa tai mainosverkkoja. Jos avaat iOS:n Jaa-toiminnon, päätät itse, minne tukikortti lähetetään. Ulkoiset tukilinkit toimivat kyseisten palvelujen omien tietosuojakäytäntöjen mukaan. Adiksessa ei ole profiileja, seurantaa tai maksuja. Tietosuoja-asiat: hyvinvalmennus@outlook.com."
     }
 
     private var emergencyCard: some View {
@@ -575,7 +588,7 @@ struct AdisHome: View {
     }
 }
 
-private enum AdisTranslations {
+private enum AddisTranslations {
     static let values: [String: [String: String]] = [
         "sv": [
             "Right now": "Just nu",
@@ -704,8 +717,8 @@ private enum AdisTranslations {
             "Show an optional faith reminder": "Visa en frivillig påminnelse om tro",
             "I can ask for help, rest and take this day one step at a time.": "Jag får be om hjälp, vila och ta en dag i taget, ett steg i sänder.",
             "Support for recovery": "Stöd för återhämtning",
-            "What does Adis do?": "Vad gör Adis?",
-            "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Adis ställer inte diagnoser, behandlar inte abstinens och ersätter inte professionell vård. Om du får kraftiga symtom när du slutar med ett ämne, fråga vårdpersonal hur du kan gå vidare på ett säkert sätt.",
+            "What does Addis do?": "Vad gör Addis?",
+            "Addis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Addis ställer inte diagnoser, behandlar inte abstinens och ersätter inte professionell vård. Om du får kraftiga symtom när du slutar med ett ämne, fråga vårdpersonal hur du kan gå vidare på ett säkert sätt.",
             "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du behöver inte återvända till trauma ensam. Tro, förlåtelse och tacksamhet är frivilliga.",
             "The app is free. It needs no account and does not send your support card to a server.": "Appen är gratis. Inget konto behövs, och ditt stödkort skickas inte till en server.",
             "Read privacy policy": "Läs integritetspolicyn",
@@ -867,8 +880,8 @@ private enum AdisTranslations {
             "Show an optional faith reminder": "Vis en frivillig påminnelse om tro",
             "I can ask for help, rest and take this day one step at a time.": "Jeg kan be om hjelp, hvile og ta denne dagen ett steg om gangen.",
             "Support for recovery": "Støtte til tilfriskning",
-            "What does Adis do?": "Hva gjør Adis?",
-            "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Adis stiller ikke diagnoser, behandler ikke abstinens og erstatter ikke profesjonell behandling. Hvis du får sterke symptomer når du slutter med et rusmiddel, spør helsepersonell om hvordan du kan gå videre trygt.",
+            "What does Addis do?": "Hva gjør Addis?",
+            "Addis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Addis stiller ikke diagnoser, behandler ikke abstinens og erstatter ikke profesjonell behandling. Hvis du får sterke symptomer når du slutter med et rusmiddel, spør helsepersonell om hvordan du kan gå videre trygt.",
             "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Du trenger ikke å gå tilbake til traumer alene. Tro, tilgivelse og takknemlighet er frivillige valg.",
             "The app is free. It needs no account and does not send your support card to a server.": "Appen er gratis. Du trenger ingen konto, og støttekortet ditt sendes ikke til en server.",
             "Read privacy policy": "Les personvernerklæringen",
@@ -1030,8 +1043,8 @@ private enum AdisTranslations {
             "Show an optional faith reminder": "Näita vabatahtlikku usu meeldetuletust",
             "I can ask for help, rest and take this day one step at a time.": "Võin abi paluda, puhata ja liikuda täna üks samm korraga.",
             "Support for recovery": "Tugi taastumisel",
-            "What does Adis do?": "Mida Adis teeb?",
-            "Adis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Adis ei diagnoosi, ei ravi võõrutusnähte ega asenda professionaalset ravi. Kui aine tarvitamise lõpetamisel tekivad tugevad sümptomid, küsi tervishoiutöötajalt, kuidas ohutult edasi minna.",
+            "What does Addis do?": "Mida Addis teeb?",
+            "Addis does not diagnose, treat withdrawal or replace professional care. If stopping a substance brings strong symptoms, ask a healthcare professional how to proceed safely.": "Addis ei diagnoosi, ei ravi võõrutusnähte ega asenda professionaalset ravi. Kui aine tarvitamise lõpetamisel tekivad tugevad sümptomid, küsi tervishoiutöötajalt, kuidas ohutult edasi minna.",
             "You do not need to revisit trauma alone. Faith, forgiveness and gratitude are optional.": "Sa ei pea traumaga üksi tegelema. Usk, andestamine ja tänulikkus on vabatahtlikud.",
             "The app is free. It needs no account and does not send your support card to a server.": "Rakendus on tasuta. Kontot pole vaja ja sinu tugikaarti ei saadeta serverisse.",
             "Read privacy policy": "Loe privaatsuspõhimõtteid",
@@ -1068,8 +1081,166 @@ private enum AdisTranslations {
         ],
     ]
     static let privacy: [String: String] = [
-        "sv": "Uppdaterad 1 oktober 2026\n\nAdis kräver inget konto. Text i stödkortet, veckoplanen och den frivilliga reflektionen finns i appens minne under den aktuella sessionen och skickas inte till en Adis-server. Språkval, vald väg, markeringar på vägen och numren på slutförda dagar i det frivilliga 21-dagarsförsöket sparas lokalt på din enhet. Du kan rensa markeringarna i appen. Adis använder inga analysverktyg eller annonsnätverk. Om du öppnar iOS delningsmeny väljer du själv vart stödkortet skickas. Externa stödlänkar följer respektive tjänsts integritetspolicy. Adis har inga profiler, ingen spårning och inga betalningar. Integritetsfrågor: hyvinvalmennus@outlook.com.",
-        "nb": "Oppdatert 1. oktober 2026\n\nAdis krever ingen konto. Tekst i støttekortet, ukeplanen og den frivillige refleksjonen blir i appens minne i den aktuelle økten og sendes ikke til en Adis-server. Språkvalg, valgt vei, merker på veien og numrene på fullførte dager i det frivillige 21-dagers forsøket lagres lokalt på enheten din. Du kan fjerne merkene i appen. Adis bruker ikke analyseverktøy eller annonsenettverk. Hvis du åpner delingsmenyen i iOS, velger du selv hvor støttekortet skal sendes. Eksterne støttelenker følger tjenestenes egne personvernregler. Adis har ingen profiler, sporing eller betalinger. Spørsmål om personvern: hyvinvalmennus@outlook.com.",
-        "et": "Uuendatud 1. oktoobril 2026\n\nAdis ei nõua kontot. Tugikaardi, nädalaplaani ja vabatahtliku mõtiskluse tekst jääb käesoleva kasutuskorra ajaks rakenduse mällu ning seda ei saadeta Adise serverisse. Keelevalik, valitud teekond, teekonna märked ja vabatahtliku 21-päevase katsetuse tehtud päevade numbrid salvestatakse seadmesse kohalikult. Märked saab rakenduses kustutada. Adis ei kasuta analüütikat ega reklaamivõrgustikke. Kui avad iOS-i jagamismenüü, valid ise, kuhu tugikaart saata. Väliste tugilinkide puhul kehtivad vastavate teenuste privaatsuspõhimõtted. Adisel pole profiile, jälgimist ega makseid. Privaatsusküsimused: hyvinvalmennus@outlook.com.",
+        "sv": "Uppdaterad 1 oktober 2026\n\nAddis kräver inget konto. Text i stödkortet, veckoplanen och den frivilliga reflektionen finns i appens minne under den aktuella sessionen och skickas inte till en Addis-server. Språkval, vald väg, markeringar på vägen och numren på slutförda dagar i det frivilliga 21-dagarsförsöket sparas lokalt på din enhet. Du kan rensa markeringarna i appen. Addis använder inga analysverktyg eller annonsnätverk. Om du öppnar iOS delningsmeny väljer du själv vart stödkortet skickas. Externa stödlänkar följer respektive tjänsts integritetspolicy. Addis har inga profiler, ingen spårning och inga betalningar. Integritetsfrågor: hyvinvalmennus@outlook.com.",
+        "nb": "Oppdatert 1. oktober 2026\n\nAddis krever ingen konto. Tekst i støttekortet, ukeplanen og den frivillige refleksjonen blir i appens minne i den aktuelle økten og sendes ikke til en Addis-server. Språkvalg, valgt vei, merker på veien og numrene på fullførte dager i det frivillige 21-dagers forsøket lagres lokalt på enheten din. Du kan fjerne merkene i appen. Addis bruker ikke analyseverktøy eller annonsenettverk. Hvis du åpner delingsmenyen i iOS, velger du selv hvor støttekortet skal sendes. Eksterne støttelenker følger tjenestenes egne personvernregler. Addis har ingen profiler, sporing eller betalinger. Spørsmål om personvern: hyvinvalmennus@outlook.com.",
+        "et": "Uuendatud 1. oktoobril 2026\n\nAddis ei nõua kontot. Tugikaardi, nädalaplaani ja vabatahtliku mõtiskluse tekst jääb käesoleva kasutuskorra ajaks rakenduse mällu ning seda ei saadeta Addise serverisse. Keelevalik, valitud teekond, teekonna märked ja vabatahtliku 21-päevase katsetuse tehtud päevade numbrid salvestatakse seadmesse kohalikult. Märked saab rakenduses kustutada. Addis ei kasuta analüütikat ega reklaamivõrgustikke. Kui avad iOS-i jagamismenüü, valid ise, kuhu tugikaart saata. Väliste tugilinkide puhul kehtivad vastavate teenuste privaatsuspõhimõtted. Addisel pole profiile, jälgimist ega makseid. Privaatsusküsimused: hyvinvalmennus@outlook.com.",
     ]
+}
+
+
+private enum AddisJournalText {
+ static let values: [String: [String]] = [
+"fi": ["Päiväkirja", "Oma olo juuri nyt", "Mikä auttoi tai tuntui hyvältä?", "Mihin tarvitsen tukea?", "Seuraava pieni askel", "Tallenna merkintä", "Uusi merkintä", "Tallennetut merkinnät", "Poista tämä merkintä", "Valitse merkintä", "Merkintä tallennettu.", "Merkintä poistettu.", "Tallennus ei onnistunut. Kopioi teksti yksityiseen paikkaan.", "Ei vielä tallennettu.", "Päiväkirja ja tehtävien muistiinpanot tallentuvat vain Tallenna-painikkeella tähän sovellukseen. Ne eivät siirry verkkoversiosta tai muille laitteille. Laitteen lukituksen avaava voi lukea ne. Voit poistaa merkinnät sovelluksessa. Sovelluksen poistaminen poistaa nämä tiedot.", "Mennyt, nykyhetki ja tulevaisuus", "Merkinnän aika"],
+"en": ["Journal", "How I feel right now", "What helped or felt good?", "Where do I need support?", "One small next step", "Save entry", "New entry", "Saved entries", "Delete this entry", "Choose an entry", "Entry saved.", "Entry deleted.", "Saving failed. Copy your text somewhere private.", "Not saved yet.", "Journal entries and task notes are saved in this app only when you tap Save. They do not sync from the website or to other devices. Anyone who can unlock this device can read them. You can delete entries in the app. Removing the app removes this data.", "Past, present and future", "Entry time"],
+"sv": ["Dagbok", "Hur jag mår just nu", "Vad hjälpte eller kändes bra?", "Var behöver jag stöd?", "Ett litet nästa steg", "Spara anteckning", "Ny anteckning", "Sparade anteckningar", "Radera denna anteckning", "Välj en anteckning", "Anteckningen sparades.", "Anteckningen raderades.", "Det gick inte att spara. Kopiera texten till en privat plats.", "Inte sparat ännu.", "Dagboksanteckningar och uppgiftsanteckningar sparas i den här appen först när du trycker på Spara. De synkroniseras inte från webbplatsen eller till andra enheter. Den som kan låsa upp enheten kan läsa dem. Du kan radera anteckningarna i appen. Om du tar bort appen raderas dessa uppgifter.", "Dåtid, nutid och framtid", "Tid för anteckningen"],
+"nb": ["Dagbok", "Hvordan jeg har det akkurat nå", "Hva hjalp eller føltes bra?", "Hvor trenger jeg støtte?", "Ett lite neste steg", "Lagre notat", "Nytt notat", "Lagrede notater", "Slett dette notatet", "Velg et notat", "Notatet er lagret.", "Notatet er slettet.", "Lagring mislyktes. Kopier teksten til et privat sted.", "Ikke lagret ennå.", "Dagbok og oppgavenotater lagres i denne appen først når du trykker på Lagre. De synkroniseres ikke fra nettsiden eller til andre enheter. Den som kan låse opp enheten, kan lese dem. Du kan slette notatene i appen. Hvis du fjerner appen, slettes disse opplysningene.", "Fortid, nåtid og fremtid", "Tid for notatet"],
+"et": ["Päevik", "Minu enesetunne praegu", "Mis aitas või tundus hea?", "Kus vajan tuge?", "Üks väike järgmine samm", "Salvesta sissekanne", "Uus sissekanne", "Salvestatud sissekanded", "Kustuta see sissekanne", "Vali sissekanne", "Sissekanne salvestatud.", "Sissekanne kustutatud.", "Salvestamine ebaõnnestus. Kopeeri tekst privaatsesse kohta.", "Veel salvestamata.", "Päevik ja ülesannete märkmed salvestatakse sellesse rakendusse ainult nupuga Salvesta. Neid ei sünkroonita veebiversioonist ega teiste seadmetega. Seadme lukustuse avaja saab neid lugeda. Kirjeid saab rakenduses kustutada. Rakenduse eemaldamine kustutab need andmed.", "Minevik, olevik ja tulevik", "Sissekande aeg"]
+ ]
+ static let greetings: [String: String] = ["fi": "Moi, mitä sinulle kuuluu?", "en": "Hi, how are you?", "sv": "Hej, hur mår du?", "nb": "Hei, hvordan har du det?", "et": "Tere, kuidas sul läheb?"]
+}
+
+private struct AddisJournalEntry: Codable, Identifiable {
+    var id = UUID()
+    var createdAt = Date()
+    var fields = ["", "", "", ""]
+}
+private struct AddisNotesData: Codable {
+    var entries: [AddisJournalEntry] = []
+    var tasks: [String: String] = [:]
+}
+private final class AddisNotesStore: ObservableObject {
+    @Published private(set) var data = AddisNotesData()
+    @Published private(set) var failed = false
+    private var loadFailed = false
+    private var location: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Addis", isDirectory: true).appendingPathComponent("notes.json")
+    }
+    init() {
+        guard FileManager.default.fileExists(atPath: location.path) else { return }
+        do {
+            let loaded = try JSONDecoder().decode(AddisNotesData.self, from: Data(contentsOf: location))
+            guard loaded.entries.allSatisfy({ $0.fields.count == 4 }) else { throw CocoaError(.fileReadCorruptFile) }
+            data = loaded
+        } catch { failed = true; loadFailed = true }
+    }
+    private func write(_ next: AddisNotesData) -> Bool {
+        guard !loadFailed else { failed = true; return false }
+        do {
+            var directory = location.deletingLastPathComponent()
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            var attributes = URLResourceValues(); attributes.isExcludedFromBackup = true
+            try directory.setResourceValues(attributes)
+            try JSONEncoder().encode(next).write(to: location, options: [.atomic, .completeFileProtection])
+            data = next; failed = false; return true
+        } catch { failed = true; return false }
+    }
+    func save(_ entry: AddisJournalEntry) -> Bool {
+        var next = data
+        if let i = next.entries.firstIndex(where: { $0.id == entry.id }) { next.entries[i] = entry }
+        else { next.entries.insert(entry, at: 0) }
+        return write(next)
+    }
+    func delete(_ id: UUID) -> Bool {
+        var next = data; next.entries.removeAll { $0.id == id }; return write(next)
+    }
+    func saveTask(_ key: String, text: String?) -> Bool {
+        var next = data; next.tasks[key] = text; return write(next)
+    }
+}
+private struct AddisTaskNoteView: View {
+    @ObservedObject var store: AddisNotesStore
+    let key: String
+    let title: String
+    let labels: [String]
+    @State private var text = ""
+    @State private var status = ""
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            TextField(title, text: $text, axis: .vertical)
+                .lineLimit(3...8).textFieldStyle(.roundedBorder)
+                .onChange(of: text) { _, _ in status = labels[13] }
+            Text(labels[14]).font(.footnote).foregroundStyle(Palette.muted)
+            Button(labels[5]) { status = store.saveTask(key, text: text) ? labels[10] : labels[12] }
+                .buttonStyle(.borderedProminent)
+            Button(labels[8], role: .destructive) {
+                if store.saveTask(key, text: nil) { text = ""; status = labels[11] }
+                else { status = labels[12] }
+            }
+            Text(status).font(.footnote).accessibilityAddTraits(.updatesFrequently)
+        }.onAppear { text = store.data.tasks[key] ?? ""; status = store.failed ? labels[12] : "" }
+    }
+}
+private struct AddisJournalView: View {
+    @ObservedObject var store: AddisNotesStore
+    let labels: [String]
+    @State private var entry = AddisJournalEntry()
+    @State private var status = ""
+    @State private var dirty = false
+    @State private var discardPrompt = false
+    @State private var deletePrompt = false
+    @State private var pending: AddisJournalEntry?
+    @Environment(\.dismiss) private var dismiss
+    private var saved: Bool { store.data.entries.contains { $0.id == entry.id } }
+    private func select(_ value: AddisJournalEntry?) {
+        entry = value ?? AddisJournalEntry(); dirty = false; status = ""
+    }
+    private func request(_ value: AddisJournalEntry?) {
+        if dirty { pending = value; discardPrompt = true } else { select(value) }
+    }
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Card {
+                        HStack { Text(entry.createdAt, style: .date); Text(entry.createdAt, style: .time) }
+                            .font(.footnote)
+                        ForEach(0..<4, id: \.self) { index in
+                            Text(labels[index + 1]).font(.headline)
+                            TextField(labels[index + 1], text: $entry.fields[index], axis: .vertical)
+                                .lineLimit(3...8).textFieldStyle(.roundedBorder)
+                                .onChange(of: entry.fields[index]) { _, _ in
+                                    dirty = entry.fields != (store.data.entries.first(where: { $0.id == entry.id })?.fields ?? ["", "", "", ""])
+                                    status = dirty ? labels[13] : ""
+                                }
+                        }
+                        Text(labels[14]).font(.footnote).foregroundStyle(Palette.muted)
+                        Button(labels[5]) {
+                            if store.save(entry) { dirty = false; status = labels[10] }
+                            else { status = labels[12] }
+                        }.buttonStyle(.borderedProminent)
+                        Button(labels[6]) { request(nil) }.buttonStyle(.bordered)
+                        if saved { Button(labels[8], role: .destructive) { deletePrompt = true } }
+                        Text(status).font(.footnote)
+                        if store.failed { Text(labels[12]).font(.footnote) }
+                    }
+                    Card {
+                        Text(labels[7]).font(.title2.bold())
+                        if store.data.entries.isEmpty { Text("—") }
+                        ForEach(store.data.entries) { item in
+                            Button { request(item) } label: {
+                                HStack { Text(item.createdAt, style: .date); Text(item.createdAt, style: .time); Spacer(); Image(systemName: "chevron.right") }
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                            }.buttonStyle(.bordered)
+                        }
+                    }
+                }.padding(16)
+            }
+            .background(Palette.background).tint(Palette.brown)
+            .navigationTitle(labels[0])
+            .toolbar { ToolbarItem(placement: .topBarTrailing) {
+                Button { dismiss() } label: { Image(systemName: "xmark.circle.fill") }
+                    .disabled(dirty).accessibilityLabel(Text(labels[0]))
+            } }
+            .interactiveDismissDisabled(dirty)
+            .confirmationDialog(labels[13], isPresented: $discardPrompt, titleVisibility: .visible) {
+                Button(pending == nil ? labels[6] : labels[9], role: .destructive) { select(pending) }
+            }
+            .confirmationDialog(labels[8], isPresented: $deletePrompt, titleVisibility: .visible) {
+                Button(labels[8], role: .destructive) {
+                    if store.delete(entry.id) { select(nil); status = labels[11] } else { status = labels[12] }
+                }
+            }
+        }
+    }
 }

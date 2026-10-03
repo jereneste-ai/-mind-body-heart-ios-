@@ -50,9 +50,9 @@
    buildSettings = {
     ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
     CODE_SIGN_STYLE = Automatic;
-    CURRENT_PROJECT_VERSION = 333;
+    CURRENT_PROJECT_VERSION = 334;
     GENERATE_INFOPLIST_FILE = YES;
-    INFOPLIST_KEY_CFBundleDisplayName = Adis;
+    INFOPLIST_KEY_CFBundleDisplayName = Addis;
     INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
     IPHONEOS_DEPLOYMENT_TARGET = 17.0;
     MARKETING_VERSION = 333.0.0;
@@ -70,9 +70,9 @@
    buildSettings = {
     ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
     CODE_SIGN_STYLE = Automatic;
-    CURRENT_PROJECT_VERSION = 333;
+    CURRENT_PROJECT_VERSION = 334;
     GENERATE_INFOPLIST_FILE = YES;
-    INFOPLIST_KEY_CFBundleDisplayName = Adis;
+    INFOPLIST_KEY_CFBundleDisplayName = Addis;
     INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
     IPHONEOS_DEPLOYMENT_TARGET = 17.0;
     MARKETING_VERSION = 333.0.0;
@@ -88,3 +88,4 @@
  };
  rootObject = A1000000000000000000000D;
 }
+
