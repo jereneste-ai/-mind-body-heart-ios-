@@ -8,9 +8,9 @@ const moodOptions = [
 
 const prompts = [
   "Mitä yksi pieni asia teki minulle hyvää tänään?",
-  "Mikä sai minut tuntemaan olevani enemmän läsnä?",
-  "Mikä olisi paras tapa tukea itseäni vielä enemmän huomenna?",
-  "Mitä minun ei tarvitse tehdä tänään täydellisesti?"
+  "Millainen minun tuli olla itseni kanssa tänään?",
+  "Mikä antoi minulle energiaa ja mikä vei sitä pois?",
+  "Mitä voisin tehdä huomenna, jotta arki tuntuu helpommalta?"
 ];
 
 const state = {
@@ -46,7 +46,7 @@ function formatDate(date = new Date()) {
 
 function loadState() {
   try {
-    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-full-state") || "null");
+    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-latest-state") || "null");
     if (!saved) return;
     Object.assign(state, saved);
   } catch (error) {
@@ -56,7 +56,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem("hyvinn-kirjaus-full-state", JSON.stringify(state));
+    localStorage.setItem("hyvinn-kirjaus-latest-state", JSON.stringify(state));
   } catch (error) {
     console.warn("Local storage unavailable", error);
   }
@@ -76,17 +76,11 @@ function renderMetrics() {
 
 function renderMoodButtons() {
   $("#moodRow").innerHTML = moodOptions
-    .map(
-      (mood) => `
-        <button
-          class="mood-btn ${state.selectedMood === mood.value ? "active" : ""}"
-          data-mood="${mood.value}"
-          type="button"
-        >
-          ${mood.label}
-        </button>
-      `
-    )
+    .map((mood) => `
+      <button class="mood-btn ${state.selectedMood === mood.value ? "active" : ""}" data-mood="${mood.value}" type="button">
+        ${mood.label}
+      </button>
+    `)
     .join("");
 
   $("#moodRow").querySelectorAll(".mood-btn").forEach((button) => {
@@ -104,6 +98,26 @@ function renderPrompts() {
     .join("");
 }
 
+function renderSummary() {
+  const averageEnergy = state.entries.length ? Math.round(state.entries.reduce((sum, item) => sum + item.energy, 0) / state.entries.length) : state.energy;
+  const averageSleep = state.entries.length ? Math.round(state.entries.reduce((sum, item) => sum + item.sleep, 0) / state.entries.length) : state.sleep;
+
+  $("#summaryGrid").innerHTML = `
+    <div class="summary-box">
+      <span class="label">Merkinnät</span>
+      <span class="value">${state.entries.length}</span>
+    </div>
+    <div class="summary-box">
+      <span class="label">Energia</span>
+      <span class="value">${averageEnergy}/10</span>
+    </div>
+    <div class="summary-box">
+      <span class="label">Uni</span>
+      <span class="value">${averageSleep}/10</span>
+    </div>
+  `;
+}
+
 function renderEntries() {
   const list = $("#entriesList");
   if (!state.entries.length) {
@@ -113,20 +127,18 @@ function renderEntries() {
 
   list.innerHTML = state.entries
     .slice(0, 12)
-    .map(
-      (entry) => `
-        <article class="entry-card">
-          <h4>${entry.moodLabel} · ${entry.date}</h4>
-          <p><strong>Mitä koen:</strong> ${entry.reflection || "—"}</p>
-          <p><strong>Mitä minua tukee:</strong> ${entry.support || "—"}</p>
-          <p><strong>Seuraava askel:</strong> ${entry.nextStep || "—"}</p>
-          <div class="entry-meta">
-            <span>Energia ${entry.energy}/10</span>
-            <span>Uni ${entry.sleep}/10</span>
-          </div>
-        </article>
-      `
-    )
+    .map((entry) => `
+      <article class="entry-card">
+        <h4>${entry.moodLabel} · ${entry.date}</h4>
+        <p><strong>Mitä koen:</strong> ${entry.reflection || "—"}</p>
+        <p><strong>Mitä tukee:</strong> ${entry.support || "—"}</p>
+        <p><strong>Seuraava askel:</strong> ${entry.nextStep || "—"}</p>
+        <div class="entry-meta">
+          <span>Energia ${entry.energy}/10</span>
+          <span>Uni ${entry.sleep}/10</span>
+        </div>
+      </article>
+    `)
     .join("");
 }
 
@@ -169,6 +181,7 @@ function saveEntry() {
   syncInputs();
   renderMoodButtons();
   renderMetrics();
+  renderSummary();
   renderEntries();
   saveState();
   toast("Merkintä tallennettu");
@@ -201,6 +214,7 @@ function exportData() {
 
 function clearEntries() {
   state.entries = [];
+  renderSummary();
   renderEntries();
   saveState();
   toast("Merkinnät tyhjennetty");
@@ -212,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPrompts();
   renderMoodButtons();
   renderMetrics();
+  renderSummary();
   syncInputs();
   renderEntries();
 
