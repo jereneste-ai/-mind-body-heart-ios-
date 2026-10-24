@@ -1,13 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="fi">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta
-      name="description"
-      content="Always Kindly × Hyvinn — a digital wellbeing ecosystem for mind, body, heart, and everyday life."
-    />
-    <title>Always Kindly × Hyvinn</title>
+    <meta name="description" content="Hyvinn Kirjaus — journal and wellbeing tracking for mind, body, heart, and everyday life." />
+    <title>Hyvinn Kirjaus</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -16,63 +13,74 @@
         <div class="brand-block">
           <div class="brand-mark">H</div>
           <div>
-            <p class="brand-label">Always Kindly × Hyvinn</p>
-            <h1>Mind • Body • Heart • Everyday Life</h1>
+            <p class="brand-label">Hyvinn</p>
+            <h1>Kirjaus</h1>
           </div>
         </div>
 
-        <nav class="top-actions" aria-label="Quick actions">
-          <button class="ghost" id="saveButton" type="button">Save</button>
-          <button class="primary" id="exportButton" type="button">Export</button>
-        </nav>
+        <div class="top-actions">
+          <button id="saveBtn" class="ghost" type="button">Tallenna</button>
+          <button id="exportBtn" class="primary" type="button">Vie</button>
+        </div>
       </header>
 
-      <main class="container">
-        <section class="hero card">
-          <div class="eyebrow">Digital wellbeing ecosystem</div>
-          <h2>Build a healthier, more meaningful life.</h2>
+      <main class="layout">
+        <section class="card hero">
+          <div class="eyebrow">Mind • Body • Heart • Everyday Life</div>
+          <h2>Hyvinvoinnin päiväkirja</h2>
           <p>
-            Hyvinn supports mental wellbeing, physical health, emotional resilience,
-            recovery, personal growth, and sustainable daily routines.
+            Kirjaa päivän tunnelma, energia, ruumiilliset signaalit, huolenaiheet ja
+            seuraava askel kohti tasapainoisempaa arkea.
           </p>
-          <div class="chips" id="heroChips" aria-label="Core themes"></div>
+          <div class="hero-metrics" id="heroMetrics"></div>
         </section>
 
-        <section class="content-grid">
-          <div class="card app-panel">
-            <div class="section-header">
-              <h3>Core applications</h3>
-            </div>
-            <div class="app-grid" id="appGrid"></div>
-            <div class="selected-detail" id="selectedApp"></div>
+        <section class="card checkin-panel">
+          <div class="section-header">
+            <h3>Päivän tarkistus</h3>
+            <div id="todayDate" class="pill"></div>
           </div>
 
-          <aside class="card">
-            <div class="section-header">
-              <h3>Weekly focus</h3>
-            </div>
-            <ul class="checklist" id="weeklyFocus"></ul>
-          </aside>
+          <div class="mood-row" id="moodRow"></div>
+
+          <div class="form-grid">
+            <label>
+              Energia
+              <input id="energy" type="range" min="1" max="10" value="7" />
+              <span id="energyValue">7/10</span>
+            </label>
+
+            <label>
+              Uni
+              <input id="sleep" type="range" min="1" max="10" value="6" />
+              <span id="sleepValue">6/10</span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label for="reflection">Mitä tänään koen?</label>
+            <textarea id="reflection" placeholder="Esimerkiksi: Olen rauhallinen, mutta väsyttää..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="support">Mitä tuki minua?</label>
+            <textarea id="support" placeholder="Esimerkiksi: Hyvä ruokailu, rauhallinen kävely, ystävän puhelu..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="nextStep">Mikä on seuraava askel?</label>
+            <textarea id="nextStep" placeholder="Esimerkiksi: Kaikki ei tarvitse hoitaa kerralla. Pidän yhden rauhallisen tauon."></textarea>
+          </div>
+
+          <button id="saveEntryBtn" class="primary wide" type="button">Tallenna merkintä</button>
         </section>
 
-        <section class="content-grid">
-          <div class="card">
-            <div class="section-header">
-              <h3>Wellbeing categories</h3>
-            </div>
-            <div class="category-grid" id="categoryGrid"></div>
+        <section class="card entries-panel">
+          <div class="section-header">
+            <h3>Merkinnät</h3>
+            <button id="clearBtn" class="ghost small" type="button">Tyhjennä</button>
           </div>
-
-          <div class="card">
-            <div class="section-header">
-              <h3>Journal</h3>
-            </div>
-            <textarea id="journalEntry" placeholder="Write a reflection for today..."></textarea>
-            <div class="entry-actions">
-              <button class="primary" id="addEntry" type="button">Save entry</button>
-            </div>
-            <ul class="entry-list" id="entryList"></ul>
-          </div>
+          <div id="entriesList" class="entries-list"></div>
         </section>
       </main>
     </div>

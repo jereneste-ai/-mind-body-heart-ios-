@@ -1,71 +1,19 @@
-const apps = [
-  {
-    id: "hyvinn",
-    name: "Hyvinn",
-    tag: "Complete wellbeing",
-    accent: "#1d6d4e",
-    summary: "The main wellbeing platform for mental clarity, physical strength, and sustainable daily routines.",
-    features: ["Mental wellbeing", "Physical health", "Recovery", "Progress tracking"],
-    details: ["Mind", "Body", "Heart", "Everyday life"]
-  },
-  {
-    id: "hyvinn-kirjaus",
-    name: "Hyvinn Kirjaus",
-    tag: "Journal & tracking",
-    accent: "#d8b35d",
-    summary: "Track habits, reflect on emotions, and log daily progress in a calm personal space.",
-    features: ["Daily journal", "Weekly check-ins", "Progress notes", "Personal rhythms"],
-    details: ["Reflection", "Habits", "Energy", "Growth"]
-  },
-  {
-    id: "always-kindly",
-    name: "Always Kindly",
-    tag: "Human-centered growth",
-    accent: "#111111",
-    summary: "A compassionate space for emotional awareness, self-kindness, identity, and recovery support.",
-    features: ["Self-awareness", "Recovery support", "Relationships", "Meaningful living"],
-    details: ["Compassion", "Identity", "Support", "Transformation"]
-  },
-  {
-    id: "always-kindly-kirjaus",
-    name: "Always Kindly Kirjaus",
-    tag: "Reflection & reset",
-    accent: "#3f675d",
-    summary: "A quiet journaling companion for emotional processing, reflection, and long-term change.",
-    features: ["Emotional journaling", "Decision support", "Breathing & reflection", "Self-compassion"],
-    details: ["Calm", "Clarity", "Growth", "Purpose"]
-  }
-];
-
-const categories = [
-  { title: "Mind", description: "Mental wellbeing, self-awareness, and emotional development." },
-  { title: "Body", description: "Physical health, strength, recovery, and nutrition." },
-  { title: "Heart", description: "Values, compassion, identity, and human connection." },
-  { title: "Everyday Life", description: "Daily routines, focus, learning, and sustainable habits." }
-];
-
-const weeklyFocus = [
-  "Notice one meaningful thing you are grateful for this week.",
-  "Plan one recovery habit that supports your energy and sleep.",
-  "Choose one healthy action for body, mind, and heart.",
-  "Protect one daily rhythm that helps you feel grounded."
-];
-
-const heroLabels = [
-  "Mental wellbeing",
-  "Physical health",
-  "Recovery",
-  "Emotional intelligence",
-  "Learning",
-  "Personal growth"
+const moodOptions = [
+  { label: "Rauhallinen", value: "calm" },
+  { label: "Virkeä", value: "energized" },
+  { label: "Väsynyt", value: "tired" },
+  { label: "Stressaantunut", value: "stressed" },
+  { label: "Toiveikas", value: "hopeful" }
 ];
 
 const state = {
-  selectedApp: "hyvinn",
-  entries: [
-    { text: "Today I choose one gentle step toward a healthier routine.", time: new Date().toISOString() },
-    { text: "My wellbeing is a system: mind, body, heart, and daily life are connected.", time: new Date().toISOString() }
-  ]
+  selectedMood: "calm",
+  energy: 7,
+  sleep: 6,
+  reflection: "",
+  support: "",
+  nextStep: "",
+  entries: []
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -77,124 +25,151 @@ function toast(message) {
   clearTimeout(toast.timeoutId);
   toast.timeoutId = setTimeout(() => {
     status.style.display = "none";
-  }, 2800);
+  }, 2600);
 }
 
-function saveState() {
-  try {
-    localStorage.setItem("hyvinn-state-v1", JSON.stringify(state));
-  } catch (error) {
-    console.warn("Local storage unavailable.", error);
-  }
+function formatDate(date = new Date()) {
+  return new Intl.DateTimeFormat("fi-FI", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  }).format(date);
 }
 
 function loadState() {
   try {
-    const saved = JSON.parse(localStorage.getItem("hyvinn-state-v1") || "null");
+    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-state") || "null");
     if (!saved) return;
-    if (saved.selectedApp) state.selectedApp = saved.selectedApp;
-    if (Array.isArray(saved.entries) && saved.entries.length) state.entries = saved.entries;
+    Object.assign(state, saved);
   } catch (error) {
-    console.warn("Could not restore saved state.", error);
+    console.warn("State restore failed", error);
   }
 }
 
-function renderHeroChips() {
-  $("#heroChips").innerHTML = heroLabels.map((label) => `<span class="chip">${label}</span>`).join("");
+function saveState() {
+  try {
+    localStorage.setItem("hyvinn-kirjaus-state", JSON.stringify(state));
+  } catch (error) {
+    console.warn("Local storage unavailable", error);
+  }
 }
 
-function renderWeeklyFocus() {
-  $("#weeklyFocus").innerHTML = weeklyFocus.map((item) => `<li>${item}</li>`).join("");
+function renderDate() {
+  $("#todayDate").textContent = formatDate();
 }
 
-function renderCategories() {
-  $("#categoryGrid").innerHTML = categories
+function renderMoodButtons() {
+  $("#moodRow").innerHTML = moodOptions
     .map(
-      (category) => `
-        <div class="category-card">
-          <strong>${category.title}</strong>
-          <span>${category.description}</span>
-        </div>
-      `
-    )
-    .join("");
-}
-
-function renderSelectedApp() {
-  const app = apps.find((item) => item.id === state.selectedApp) || apps[0];
-  $("#selectedApp").innerHTML = `
-    <h4>${app.name}</h4>
-    <p>${app.summary}</p>
-    <div class="detail-grid">
-      ${app.details.map((detail) => `<span class="detail-pill">${detail}</span>`).join("")}
-    </div>
-  `;
-}
-
-function renderApps() {
-  $("#appGrid").innerHTML = apps
-    .map(
-      (app) => `
-        <button class="app-card ${app.id === state.selectedApp ? "selected" : ""}" data-app="${app.id}" type="button" style="border-color: ${app.id === state.selectedApp ? app.accent : "rgba(18, 62, 46, 0.12)"};">
-          <span class="tag" style="background: ${app.accent}20; color: ${app.accent};">${app.tag}</span>
-          <h4>${app.name}</h4>
-          <p>${app.summary}</p>
-          <ul>
-            ${app.features.map((feature) => `<li>${feature}</li>`).join("")}
-          </ul>
+      (mood) => `
+        <button
+          class="mood-btn ${state.selectedMood === mood.value ? "active" : ""}"
+          data-mood="${mood.value}"
+          type="button"
+        >
+          ${mood.label}
         </button>
       `
     )
     .join("");
 
-  $("#appGrid").querySelectorAll(".app-card").forEach((button) => {
+  $("#moodRow").querySelectorAll(".mood-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      state.selectedApp = button.dataset.app;
-      renderApps();
-      renderSelectedApp();
-      saveState();
-      toast(`${apps.find((item) => item.id === state.selectedApp)?.name || "Hyvinn"} selected`);
+      state.selectedMood = button.dataset.mood;
+      renderMoodButtons();
     });
   });
 }
 
+function renderMetrics() {
+  $("#heroMetrics").innerHTML = `
+    <div class="metric">Energia: ${state.energy}/10</div>
+    <div class="metric">Uni: ${state.sleep}/10</div>
+    <div class="metric">Mieli: ${moodOptions.find((item) => item.value === state.selectedMood)?.label || "Rauhallinen"}</div>
+  `;
+}
+
 function renderEntries() {
-  $("#entryList").innerHTML = state.entries
-    .slice(0, 6)
+  const list = $("#entriesList");
+  if (!state.entries.length) {
+    list.innerHTML = '<div class="entry-card"><p>Ei vielä merkintöjä. Aloita ensimmäinen kirjaus.</p></div>';
+    return;
+  }
+
+  list.innerHTML = state.entries
+    .slice(0, 12)
     .map(
       (entry) => `
-        <li>
-          ${entry.text}
-          <small>${new Date(entry.time).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}</small>
-        </li>
+        <article class="entry-card">
+          <h4>${entry.moodLabel} · ${entry.date}</h4>
+          <p><strong>Mitä koen:</strong> ${entry.reflection || "—"}</p>
+          <p><strong>Mitä tuki:</strong> ${entry.support || "—"}</p>
+          <p><strong>Seuraava askel:</strong> ${entry.nextStep || "—"}</p>
+          <div class="entry-meta">
+            <span>Energia ${entry.energy}/10</span>
+            <span>Uni ${entry.sleep}/10</span>
+          </div>
+        </article>
       `
     )
     .join("");
 }
 
-function addEntry() {
-  const value = $("#journalEntry").value.trim();
-  if (!value) {
-    toast("Write a reflection first.");
+function syncInputs() {
+  $("#energy").value = state.energy;
+  $("#sleep").value = state.sleep;
+  $("#energyValue").textContent = `${state.energy}/10`;
+  $("#sleepValue").textContent = `${state.sleep}/10`;
+  $("#reflection").value = state.reflection;
+  $("#support").value = state.support;
+  $("#nextStep").value = state.nextStep;
+}
+
+function saveEntry() {
+  const reflection = $("#reflection").value.trim();
+  if (!reflection) {
+    toast("Kirjoita ensin päivän tunnelma.");
     return;
   }
 
-  state.entries.unshift({ text: value, time: new Date().toISOString() });
-  $("#journalEntry").value = "";
+  const moodLabel = moodOptions.find((item) => item.value === state.selectedMood)?.label || "Rauhallinen";
+
+  state.entries.unshift({
+    date: formatDate(),
+    moodLabel,
+    energy: Number($("#energy").value),
+    sleep: Number($("#sleep").value),
+    reflection,
+    support: $("#support").value.trim(),
+    nextStep: $("#nextStep").value.trim()
+  });
+
+  state.reflection = "";
+  state.support = "";
+  state.nextStep = "";
+  state.energy = 7;
+  state.sleep = 6;
+  state.selectedMood = "calm";
+
+  syncInputs();
+  renderMoodButtons();
+  renderMetrics();
   renderEntries();
   saveState();
-  toast("Entry saved");
+  toast("Merkintä tallennettu");
 }
 
 function exportData() {
   const payload = {
-    ...state,
-    exportedAt: new Date().toISOString()
+    app: "Hyvinn Kirjaus",
+    savedAt: new Date().toISOString(),
+    entries: state.entries
   };
 
   if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeExport) {
     window.webkit.messageHandlers.nativeExport.postMessage(payload);
-    toast("Export started");
+    toast("Vienti aloitettu");
     return;
   }
 
@@ -202,30 +177,60 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "hyvinn-export.json";
+  link.download = "hyvinn-kirjaus.json";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-  toast("Export created");
+  toast("Vienti valmis");
+}
+
+function clearEntries() {
+  state.entries = [];
+  renderEntries();
+  saveState();
+  toast("Merkinnät tyhjennetty");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   loadState();
-  renderHeroChips();
-  renderWeeklyFocus();
-  renderCategories();
-  renderApps();
-  renderSelectedApp();
+  renderDate();
+  renderMoodButtons();
+  renderMetrics();
+  syncInputs();
   renderEntries();
 
-  $("#saveButton").addEventListener("click", () => {
-    saveState();
-    toast("Saved locally");
+  $("#energy").addEventListener("input", (event) => {
+    state.energy = Number(event.target.value);
+    $("#energyValue").textContent = `${state.energy}/10`;
+    renderMetrics();
   });
 
-  $("#exportButton").addEventListener("click", exportData);
-  $("#addEntry").addEventListener("click", addEntry);
+  $("#sleep").addEventListener("input", (event) => {
+    state.sleep = Number(event.target.value);
+    $("#sleepValue").textContent = `${state.sleep}/10`;
+    renderMetrics();
+  });
+
+  $("#reflection").addEventListener("input", (event) => {
+    state.reflection = event.target.value;
+  });
+
+  $("#support").addEventListener("input", (event) => {
+    state.support = event.target.value;
+  });
+
+  $("#nextStep").addEventListener("input", (event) => {
+    state.nextStep = event.target.value;
+  });
+
+  $("#saveEntryBtn").addEventListener("click", saveEntry);
+  $("#saveBtn").addEventListener("click", () => {
+    saveState();
+    toast("Tallennettu paikallisesti");
+  });
+  $("#exportBtn").addEventListener("click", exportData);
+  $("#clearBtn").addEventListener("click", clearEntries);
 });
 
 window.state = state;

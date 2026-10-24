@@ -3,7 +3,7 @@ import WebKit
 import UIKit
 
 @main
-struct HyvinnApp: App {
+struct HyvinnKirjausApp: App {
     var body: some Scene {
         WindowGroup {
             BrowserScreen()
@@ -21,7 +21,6 @@ struct BrowserScreen: UIViewControllerRepresentable {
 
 final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
     private var web: WKWebView!
-    private var exportURL: URL?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +44,12 @@ final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDeleg
         if let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") {
             web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
         } else {
-            showError("Hyvinn content is missing.")
+            showError("Hyvinn Kirjaus content is missing.")
         }
     }
 
     func showError(_ text: String) {
-        let alert = UIAlertController(title: "Always Kindly × Hyvinn", message: text, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Hyvinn Kirjaus", message: text, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Close", style: .cancel))
         present(alert, animated: true)
     }
@@ -66,10 +65,8 @@ final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDeleg
             }
 
             do {
-                let url = FileManager.default.temporaryDirectory.appendingPathComponent("hyvinn-export.json")
+                let url = FileManager.default.temporaryDirectory.appendingPathComponent("hyvinn-kirjaus-export.json")
                 try text.write(to: url, atomically: true, encoding: .utf8)
-                self.exportURL = url
-
                 let share = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 share.popoverPresentationController?.sourceView = self.view
                 share.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 1, height: 1)
@@ -107,16 +104,5 @@ final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDeleg
             external(url)
         }
         return nil
-    }
-
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-        let alert = UIAlertController(title: "Hyvinn", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            completionHandler(false)
-        })
-        alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
-            completionHandler(true)
-        })
-        present(alert, animated: true)
     }
 }

@@ -1,4 +1,4 @@
-name: Hyvinn
+name: HyvinnKirjaus
 options:
   deploymentTarget:
     iOS: '16.0'
@@ -8,7 +8,7 @@ settings:
     MARKETING_VERSION: '1.0'
     CURRENT_PROJECT_VERSION: '1'
 targets:
-  Hyvinn:
+  HyvinnKirjaus:
     type: application
     platform: iOS
     sources:
@@ -19,15 +19,15 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jereneste.hyvinn
+        PRODUCT_BUNDLE_IDENTIFIER: com.jereneste.hyvinnkirjaus
         INFOPLIST_FILE: OmaTahti/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: '1,2'
         CODE_SIGN_STYLE: Automatic
 schemes:
-  Hyvinn:
+  HyvinnKirjaus:
     build:
       targets:
-        Hyvinn: all
+        HyvinnKirjaus: all
     archive:
       config: Release
