@@ -6,6 +6,13 @@ const moodOptions = [
   { label: "Toiveikas", value: "hopeful" }
 ];
 
+const prompts = [
+  "Mitä yksi pieni asia teki minulle hyvää tänään?",
+  "Mikä sai minut tuntemaan olevani enemmän läsnä?",
+  "Mikä olisi paras tapa tukea itseäni vielä enemmän huomenna?",
+  "Mitä minun ei tarvitse tehdä tänään täydellisesti?"
+];
+
 const state = {
   selectedMood: "calm",
   energy: 7,
@@ -39,7 +46,7 @@ function formatDate(date = new Date()) {
 
 function loadState() {
   try {
-    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-state") || "null");
+    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-full-state") || "null");
     if (!saved) return;
     Object.assign(state, saved);
   } catch (error) {
@@ -49,7 +56,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem("hyvinn-kirjaus-state", JSON.stringify(state));
+    localStorage.setItem("hyvinn-kirjaus-full-state", JSON.stringify(state));
   } catch (error) {
     console.warn("Local storage unavailable", error);
   }
@@ -57,6 +64,14 @@ function saveState() {
 
 function renderDate() {
   $("#todayDate").textContent = formatDate();
+}
+
+function renderMetrics() {
+  $("#heroMetrics").innerHTML = `
+    <div class="metric">Energia: ${state.energy}/10</div>
+    <div class="metric">Uni: ${state.sleep}/10</div>
+    <div class="metric">Tila: ${moodOptions.find((item) => item.value === state.selectedMood)?.label || "Rauhallinen"}</div>
+  `;
 }
 
 function renderMoodButtons() {
@@ -83,12 +98,10 @@ function renderMoodButtons() {
   });
 }
 
-function renderMetrics() {
-  $("#heroMetrics").innerHTML = `
-    <div class="metric">Energia: ${state.energy}/10</div>
-    <div class="metric">Uni: ${state.sleep}/10</div>
-    <div class="metric">Mieli: ${moodOptions.find((item) => item.value === state.selectedMood)?.label || "Rauhallinen"}</div>
-  `;
+function renderPrompts() {
+  $("#promptList").innerHTML = prompts
+    .map((prompt) => `<div class="prompt-card">${prompt}</div>`)
+    .join("");
 }
 
 function renderEntries() {
@@ -105,7 +118,7 @@ function renderEntries() {
         <article class="entry-card">
           <h4>${entry.moodLabel} · ${entry.date}</h4>
           <p><strong>Mitä koen:</strong> ${entry.reflection || "—"}</p>
-          <p><strong>Mitä tuki:</strong> ${entry.support || "—"}</p>
+          <p><strong>Mitä minua tukee:</strong> ${entry.support || "—"}</p>
           <p><strong>Seuraava askel:</strong> ${entry.nextStep || "—"}</p>
           <div class="entry-meta">
             <span>Energia ${entry.energy}/10</span>
@@ -196,6 +209,7 @@ function clearEntries() {
 document.addEventListener("DOMContentLoaded", () => {
   loadState();
   renderDate();
+  renderPrompts();
   renderMoodButtons();
   renderMetrics();
   syncInputs();

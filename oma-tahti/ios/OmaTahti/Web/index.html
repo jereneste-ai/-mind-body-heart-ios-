@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="Hyvinn Kirjaus — journal and wellbeing tracking for mind, body, heart, and everyday life." />
+    <meta name="description" content="Hyvinn Kirjaus — päivän hyvinvointi, mieli, energia ja oma kehitys." />
     <title>Hyvinn Kirjaus</title>
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -21,16 +21,17 @@
         <div class="top-actions">
           <button id="saveBtn" class="ghost" type="button">Tallenna</button>
           <button id="exportBtn" class="primary" type="button">Vie</button>
+          <button id="clearBtn" class="ghost small" type="button">Tyhjennä</button>
         </div>
       </header>
 
       <main class="layout">
         <section class="card hero">
           <div class="eyebrow">Mind • Body • Heart • Everyday Life</div>
-          <h2>Hyvinvoinnin päiväkirja</h2>
+          <h2>Päivän hyvinvointi</h2>
           <p>
-            Kirjaa päivän tunnelma, energia, ruumiilliset signaalit, huolenaiheet ja
-            seuraava askel kohti tasapainoisempaa arkea.
+            Hyvinvointi rakentuu pienistä, toistuvista valinnoista. Kirjaa tänään
+            tunnetila, energia, palautuminen ja seuraava askel kohti tasapainoisempaa arkea.
           </p>
           <div class="hero-metrics" id="heroMetrics"></div>
         </section>
@@ -51,7 +52,7 @@
             </label>
 
             <label>
-              Uni
+              Uni ja lepo
               <input id="sleep" type="range" min="1" max="10" value="6" />
               <span id="sleepValue">6/10</span>
             </label>
@@ -59,26 +60,33 @@
 
           <div class="field-group">
             <label for="reflection">Mitä tänään koen?</label>
-            <textarea id="reflection" placeholder="Esimerkiksi: Olen rauhallinen, mutta väsyttää..."></textarea>
+            <textarea id="reflection" placeholder="Esimerkiksi: Tunnen oloni rauhalliseksi, mutta minulla on paljon ajatuksia..."></textarea>
           </div>
 
           <div class="field-group">
-            <label for="support">Mitä tuki minua?</label>
-            <textarea id="support" placeholder="Esimerkiksi: Hyvä ruokailu, rauhallinen kävely, ystävän puhelu..."></textarea>
+            <label for="support">Mitä minua tukee?</label>
+            <textarea id="support" placeholder="Esimerkiksi: Rauhallinen kävely, puhelu, hyvä ruokailu, selkeä suunnitelma..."></textarea>
           </div>
 
           <div class="field-group">
             <label for="nextStep">Mikä on seuraava askel?</label>
-            <textarea id="nextStep" placeholder="Esimerkiksi: Kaikki ei tarvitse hoitaa kerralla. Pidän yhden rauhallisen tauon."></textarea>
+            <textarea id="nextStep" placeholder="Esimerkiksi: Pidän yhden levon ja teen yhden tärkeän asian ennen iltaa."></textarea>
           </div>
 
           <button id="saveEntryBtn" class="primary wide" type="button">Tallenna merkintä</button>
         </section>
 
+        <aside class="card prompts-panel">
+          <div class="section-header">
+            <h3>Ajatukset</h3>
+          </div>
+
+          <div class="prompt-list" id="promptList"></div>
+        </aside>
+
         <section class="card entries-panel">
           <div class="section-header">
             <h3>Merkinnät</h3>
-            <button id="clearBtn" class="ghost small" type="button">Tyhjennä</button>
           </div>
           <div id="entriesList" class="entries-list"></div>
         </section>
