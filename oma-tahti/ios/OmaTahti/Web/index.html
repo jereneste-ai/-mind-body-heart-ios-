@@ -1,1 +1,84 @@
-<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Yhdeksän maksutonta arjen työkalua. Liike, mieli, ruoka, toipuminen ja oma rytmi."><title>Oma tahti</title><link rel="stylesheet" href="style.css"></head><body><header><button id="menu" aria-label="Avaa valikko" aria-expanded="false"><span></span><span></span><span></span></button><a href="#" class="brand">OMA TAHTI<span>MIND · BODY · HEART</span></a><a href="#tukis" class="support">Ihmisen tuki</a></header><aside id="drawer" hidden><nav id="nav" aria-label="Sovellukset"></nav></aside><main id="main"></main><footer>Maksuton · Aikuisille · Oma tahti<br>Arjen työkaluja, ei hoitopalvelu. Sovellus ei seuraa vointiasi eikä hälytä apua.<br><button id="privacy">Tietosi ja yksityisyys</button><p><a href="https://oma-tahti-yhdeksan.jereneste.chatgpt.site/tietosuoja.html">Tietosuojaseloste</a> · <a href="https://oma-tahti-yhdeksan.jereneste.chatgpt.site/tuki.html">Sovelluksen tuki</a></p></footer><dialog id="dialog"><div id="dialogContent"></div><button id="close">Sulje</button></dialog><div role="status" id="status"></div><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Always Kindly × Hyvinn — a digital wellbeing ecosystem for mind, body, heart, and everyday life."
+    />
+    <title>Always Kindly × Hyvinn</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark">H</div>
+          <div>
+            <p class="brand-label">Always Kindly × Hyvinn</p>
+            <h1>Mind • Body • Heart • Everyday Life</h1>
+          </div>
+        </div>
+
+        <nav class="top-actions" aria-label="Quick actions">
+          <button class="ghost" id="saveButton" type="button">Save</button>
+          <button class="primary" id="exportButton" type="button">Export</button>
+        </nav>
+      </header>
+
+      <main class="container">
+        <section class="hero card">
+          <div class="eyebrow">Digital wellbeing ecosystem</div>
+          <h2>Build a healthier, more meaningful life.</h2>
+          <p>
+            Hyvinn supports mental wellbeing, physical health, emotional resilience,
+            recovery, personal growth, and sustainable daily routines.
+          </p>
+          <div class="chips" id="heroChips" aria-label="Core themes"></div>
+        </section>
+
+        <section class="content-grid">
+          <div class="card app-panel">
+            <div class="section-header">
+              <h3>Core applications</h3>
+            </div>
+            <div class="app-grid" id="appGrid"></div>
+            <div class="selected-detail" id="selectedApp"></div>
+          </div>
+
+          <aside class="card">
+            <div class="section-header">
+              <h3>Weekly focus</h3>
+            </div>
+            <ul class="checklist" id="weeklyFocus"></ul>
+          </aside>
+        </section>
+
+        <section class="content-grid">
+          <div class="card">
+            <div class="section-header">
+              <h3>Wellbeing categories</h3>
+            </div>
+            <div class="category-grid" id="categoryGrid"></div>
+          </div>
+
+          <div class="card">
+            <div class="section-header">
+              <h3>Journal</h3>
+            </div>
+            <textarea id="journalEntry" placeholder="Write a reflection for today..."></textarea>
+            <div class="entry-actions">
+              <button class="primary" id="addEntry" type="button">Save entry</button>
+            </div>
+            <ul class="entry-list" id="entryList"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="status" class="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
