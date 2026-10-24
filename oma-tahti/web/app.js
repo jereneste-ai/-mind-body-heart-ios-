@@ -46,7 +46,7 @@ function formatDate(date = new Date()) {
 
 function loadState() {
   try {
-    const saved = JSON.parse(localStorage.getItem("hyvinn-kirjaus-latest-state") || "null");
+    const saved = JSON.parse(localStorage.getItem("always-kindly-hyvinn-state") || "null");
     if (!saved) return;
     Object.assign(state, saved);
   } catch (error) {
@@ -56,7 +56,7 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem("hyvinn-kirjaus-latest-state", JSON.stringify(state));
+    localStorage.setItem("always-kindly-hyvinn-state", JSON.stringify(state));
   } catch (error) {
     console.warn("Local storage unavailable", error);
   }
@@ -189,7 +189,7 @@ function saveEntry() {
 
 function exportData() {
   const payload = {
-    app: "Hyvinn Kirjaus",
+    app: "Always Kindly × Hyvinn",
     savedAt: new Date().toISOString(),
     entries: state.entries
   };
@@ -204,7 +204,7 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "hyvinn-kirjaus.json";
+  link.download = "always-kindly-hyvinn.json";
   document.body.appendChild(link);
   link.click();
   link.remove();

@@ -3,7 +3,7 @@ import WebKit
 import UIKit
 
 @main
-struct HyvinnKirjausApp: App {
+struct AlwaysKindlyHyvinnApp: App {
     var body: some Scene {
         WindowGroup {
             BrowserScreen()
@@ -44,12 +44,12 @@ final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDeleg
         if let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "Web") {
             web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
         } else {
-            showError("Hyvinn Kirjaus content is missing.")
+            showError("Always Kindly × Hyvinn content is missing.")
         }
     }
 
     func showError(_ text: String) {
-        let alert = UIAlertController(title: "Hyvinn Kirjaus", message: text, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Always Kindly × Hyvinn", message: text, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Close", style: .cancel))
         present(alert, animated: true)
     }
@@ -65,7 +65,7 @@ final class BrowserController: UIViewController, WKNavigationDelegate, WKUIDeleg
             }
 
             do {
-                let url = FileManager.default.temporaryDirectory.appendingPathComponent("hyvinn-kirjaus-export.json")
+                let url = FileManager.default.temporaryDirectory.appendingPathComponent("always-kindly-hyvinn-export.json")
                 try text.write(to: url, atomically: true, encoding: .utf8)
                 let share = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 share.popoverPresentationController?.sourceView = self.view

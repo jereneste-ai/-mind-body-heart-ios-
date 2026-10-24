@@ -1,4 +1,4 @@
-name: HyvinnKirjaus
+name: AlwaysKindlyHyvinn
 options:
   deploymentTarget:
     iOS: '16.0'
@@ -8,7 +8,7 @@ settings:
     MARKETING_VERSION: '1.0'
     CURRENT_PROJECT_VERSION: '1'
 targets:
-  HyvinnKirjaus:
+  AlwaysKindlyHyvinn:
     type: application
     platform: iOS
     sources:
@@ -19,15 +19,15 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.jereneste.hyvinnkirjaus
+        PRODUCT_BUNDLE_IDENTIFIER: com.jereneste.alwayskindlyhyvinn
         INFOPLIST_FILE: OmaTahti/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: '1,2'
         CODE_SIGN_STYLE: Automatic
 schemes:
-  HyvinnKirjaus:
+  AlwaysKindlyHyvinn:
     build:
       targets:
-        HyvinnKirjaus: all
+        AlwaysKindlyHyvinn: all
     archive:
       config: Release
